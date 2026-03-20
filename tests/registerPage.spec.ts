@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { RegisterPage } from '../pages/registerPage';
 import { LoginPage } from '../pages/loginPage';
+import { createRandomUser, generateRandomEmail } from '../utils/randomData';
 
 // test.describe('Registration suite', () => {
 //   let regTitle;
@@ -109,13 +110,17 @@ test.describe('User Registration suite', () => {
 
       await registerPage.fillRegisterForm({
         name: 'Test User',
-        email: 'Test123@gmail.com',
+        email: generateRandomEmail(),
         password: 'Pass123123',
         confirmPassword: 'Pass123123'
       });
 
+      const user = createRandomUser();
+ 
+      await registerPage.fillRegisterForm(user);
+
       await expect(registerPage.regNameInput).toHaveValue('Test User');
-      await expect(registerPage.regEmailInput).toHaveValue('Test123@gmail.com');
+      await expect(registerPage.regEmailInput).toHaveValue(generateRandomEmail());
       await expect(registerPage.regPassInput).toHaveValue('Pass123123');
       await expect(registerPage.regConfirmPassInput).toHaveValue('Pass123123');
 

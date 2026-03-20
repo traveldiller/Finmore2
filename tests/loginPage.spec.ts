@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
 import { USERS } from './testData';
 import testData from './testData.json';
+import { generateRandomEmail } from '../utils/randomData';
 
 
 // 1st option for user data
@@ -42,17 +43,19 @@ test.describe('Login suite', () => {
             //     ADMIN_CREDENTIALS
             // );
 
+//3rd option JSON file with test data  
             const admin = testData.admin;
 
-            await loginPage.login({
+            await loginPage.fillLoginData({
                 email: admin.email,
                 password: admin.password
             });
 
             await expect(loginPage.loginEmailInput).toHaveValue(admin.email);
 
+// 2nd option const USERS in testData.ts
 
-            await loginPage.login(
+            await loginPage.fillLoginData(
                 USERS.admin
             );
             

@@ -25,7 +25,7 @@ export class LoginPage {
         this.appLogo = page.getByTestId('app-logo');
     }
 
-    async login(data: LoginData) {
+    async fillLoginData(data: LoginData) {
         await this.loginEmailInput.fill(data.email);
         await this.loginPassInput.fill(data.password);
     }
@@ -37,6 +37,12 @@ export class LoginPage {
     async openHomepage() {
         await this.page.goto('/');
     }
+
+    ///when several arguments in one method only to use, interface for reusage and more arguments
+    //     async fillLoginData(email:string, password:string ) {
+    //     await this.loginEmailInput.fill(data.email);
+    //     await this.loginPassInput.fill(data.password);
+    // }
 
 }
 
