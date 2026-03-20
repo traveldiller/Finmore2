@@ -1,6 +1,6 @@
 export const USERS = {
     admin: {
-        email: 'admin@demo.com',
+        email: 'admin@demo.com', 
         password: 'admin123',
         name: 'Admin Demo'
     },
@@ -12,4 +12,4 @@ export const USERS = {
     },
 };
 
-// other data to add
+// other data to add Register Data 
