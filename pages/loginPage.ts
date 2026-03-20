@@ -23,25 +23,34 @@ export class LoginPage {
         this.userMenu = page.getByTestId('user-menu-trigger');
         this.appTitle = page.getByTestId('app-title'); // 2 same ID for the page: header 'FinanceManager' with space and without
         this.appLogo = page.getByTestId('app-logo');
-    }
+    };
 
     async fillLoginData(data: LoginData) {
         await this.loginEmailInput.fill(data.email);
+        //console.log(data.email) to show output;
         await this.loginPassInput.fill(data.password);
-    }
+    };
 
     async clickOnLoginButton() {
         await this.loginSubmitButton.click();
-    }
+    };
 
     async openHomepage() {
         await this.page.goto('/');
-    }
+    };
+
+
+    async clickElement(element: Locator, options?: { timeout?: number, force?: boolean }) {
+        const timeout = options?.timeout ?? 5000;
+        await element.waitFor({ state: 'visible', timeout });
+        await element.waitFor({ state: 'attached', timeout });
+        await element.click({ force: options?.force ?? false });
+    };
 
     ///when several arguments in one method only to use, interface for reusage and more arguments
     //     async fillLoginData(email:string, password:string ) {
-    //     await this.loginEmailInput.fill(data.email);
-    //     await this.loginPassInput.fill(data.password);
+    //     await this.loginEmailInput.fill(email);
+    //     await this.loginPassInput.fill(password);
     // }
 
 }
