@@ -2,7 +2,8 @@
   "admin": {
     "email": "admin@demo.com",
     "password": "admin123",
-    "name": "Admin Demo"
+    "name": "Admin Demo",
+    "phone": "6467383839"
   },
   "manager": {
     "email": "manager@demo.com",
@@ -10,3 +11,6 @@
     "name": "Manager Demo"
   }
 }
+
+
+
