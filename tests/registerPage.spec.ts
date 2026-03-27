@@ -82,6 +82,8 @@ test.describe('User Registration suite', () => {
     loginPage = new LoginPage(page);
     registerPage = new RegisterPage(page);
     loginPage.openHomepage();
+   // loginPage.fillLoginData();ni
+   // loginPage.clickOnLoginButton();
   });
 
   test('Registration of new user', async ({ page }) => {

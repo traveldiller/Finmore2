@@ -43,7 +43,7 @@ test.describe('Login suite', () => {
             //     ADMIN_CREDENTIALS
             // );
 
-//3rd option JSON file with test data  
+           //3rd option JSON file with test data  
             const admin = testData.admin;
 
             await loginPage.fillLoginData({
