@@ -39,7 +39,7 @@ export class LoginPage {
         await this.page.goto('/');
     };
 
-
+//own function for additional checks
     async clickElement(element: Locator, options?: { timeout?: number, force?: boolean }) {
         const timeout = options?.timeout ?? 5000;
         await element.waitFor({ state: 'visible', timeout });
