@@ -97,6 +97,7 @@ class EnterpriseReporter implements Reporter {
   private playwrightConfig?: FullConfig;
   private testsByProject: Map<string, TestData[]> = new Map();
   private testsByFile: Map<string, TestData[]> = new Map();
+  private testsByCategory: Map<string, TestData[]> = new Map();
   private translations: any;
 
   constructor(config: ReporterConfig = {}) {
@@ -125,117 +126,84 @@ class EnterpriseReporter implements Reporter {
     const translations: any = {
       uk: {
         testReport: 'Звіт про виконання тестів',
-        summary: 'ПІДСУМКИ ВИКОНАННЯ ТЕСТІВ',
+        overview: 'Огляд',
+        categories: 'Категорії',
+        suites: 'Набори тестів',
+        graphs: 'Графіки',
+        timeline: 'Часова шкала',
+        behaviors: 'Поведінка',
+        packages: 'Пакети',
         totalTests: 'Всього тестів',
+        testCases: 'тест кейсів',
         passed: 'Пройдено',
         failed: 'Провалено',
+        broken: 'Зламано',
         skipped: 'Пропущено',
-        flaky: 'Нестабільні',
+        unknown: 'Невідомо',
         duration: 'Тривалість',
         passRate: 'Показник успішності',
-        overview: 'Огляд',
-        allTests: 'Всі тести',
-        failedTests: 'Провалені',
-        timeline: 'Часова шкала',
-        projects: 'По проектах',
-        statusDistribution: 'Розподіл за статусом',
-        durationAnalysis: 'Аналіз тривалості',
-        testsByCategory: 'Тести за категоріями',
-        passRateTrend: 'Тренд успішності',
-        topFilesByTests: 'Топ файлів за тестами',
-        slowestTests: 'Найповільніші тести',
-        projectsSummary: 'Підсумки проектів',
-        testDetails: 'Деталі тестів',
-        testExecutionTimeline: 'Часова шкала виконання тестів',
-        testSteps: 'Кроки тесту',
-        error: 'Помилка',
-        noFailedTests: '🎉 Немає провалених тестів!',
-        timestamp: 'Час виконання',
-        workers: 'Воркери',
-        nodeVersion: 'Версія Node',
-        playwright: 'Playwright',
-        platform: 'Платформа',
+        features: 'Функції',
         environment: 'Середовище',
-        all: 'Всі',
-        search: 'Пошук тестів...',
-        generatedAt: 'Згенеровано',
-        tests: 'тестів',
+        trend: 'Тренд',
+        itemsTotal: 'елементів всього',
+        showAll: 'Показати все',
+        nothingToShow: 'Немає даних для відображення',
+        executors: 'Виконавці',
+        noExecutorInfo: 'Немає інформації про виконавців тестів',
       },
       en: {
         testReport: 'Test Execution Report',
-        summary: 'TEST EXECUTION SUMMARY',
+        overview: 'Overview',
+        categories: 'Categories',
+        suites: 'Suites',
+        graphs: 'Graphs',
+        timeline: 'Timeline',
+        behaviors: 'Behaviors',
+        packages: 'Packages',
         totalTests: 'Total Tests',
+        testCases: 'test cases',
         passed: 'Passed',
         failed: 'Failed',
+        broken: 'Broken',
         skipped: 'Skipped',
-        flaky: 'Flaky',
+        unknown: 'Unknown',
         duration: 'Duration',
         passRate: 'Pass Rate',
-        overview: 'Overview',
-        allTests: 'All Tests',
-        failedTests: 'Failed',
-        timeline: 'Timeline',
-        projects: 'By Project',
-        statusDistribution: 'Status Distribution',
-        durationAnalysis: 'Duration Analysis',
-        testsByCategory: 'Tests by Category',
-        passRateTrend: 'Pass Rate Trend',
-        topFilesByTests: 'Top Files by Tests',
-        slowestTests: 'Slowest Tests',
-        projectsSummary: 'Projects Summary',
-        testDetails: 'Test Details',
-        testExecutionTimeline: 'Test Execution Timeline',
-        testSteps: 'Test Steps',
-        error: 'Error',
-        noFailedTests: '🎉 No failed tests!',
-        timestamp: 'Timestamp',
-        workers: 'Workers',
-        nodeVersion: 'Node Version',
-        playwright: 'Playwright',
-        platform: 'Platform',
+        features: 'Features',
         environment: 'Environment',
-        all: 'All',
-        search: 'Search tests...',
-        generatedAt: 'Generated',
-        tests: 'tests',
+        trend: 'Trend',
+        itemsTotal: 'items total',
+        showAll: 'Show all',
+        nothingToShow: 'There is nothing to show',
+        executors: 'Executors',
+        noExecutorInfo: 'There is no information about tests executors',
       },
       pl: {
         testReport: 'Raport wykonania testów',
-        summary: 'PODSUMOWANIE WYKONANIA TESTÓW',
+        overview: 'Przegląd',
+        categories: 'Kategorie',
+        suites: 'Zestawy',
+        graphs: 'Wykresy',
+        timeline: 'Oś czasu',
+        behaviors: 'Zachowania',
+        packages: 'Pakiety',
         totalTests: 'Wszystkie testy',
+        testCases: 'przypadków testowych',
         passed: 'Zaliczone',
         failed: 'Nieudane',
+        broken: 'Uszkodzone',
         skipped: 'Pominięte',
-        flaky: 'Niestabilne',
+        unknown: 'Nieznane',
         duration: 'Czas trwania',
         passRate: 'Wskaźnik sukcesu',
-        overview: 'Przegląd',
-        allTests: 'Wszystkie testy',
-        failedTests: 'Nieudane',
-        timeline: 'Oś czasu',
-        projects: 'Według projektów',
-        statusDistribution: 'Rozkład według statusu',
-        durationAnalysis: 'Analiza czasu trwania',
-        testsByCategory: 'Testy według kategorii',
-        passRateTrend: 'Trend wskaźnika sukcesu',
-        topFilesByTests: 'Najważniejsze pliki według testów',
-        slowestTests: 'Najwolniejsze testy',
-        projectsSummary: 'Podsumowanie projektów',
-        testDetails: 'Szczegóły testów',
-        testExecutionTimeline: 'Oś czasu wykonania testów',
-        testSteps: 'Kroki testu',
-        error: 'Błąd',
-        noFailedTests: '🎉 Brak nieudanych testów!',
-        timestamp: 'Znacznik czasu',
-        workers: 'Workery',
-        nodeVersion: 'Wersja Node',
-        playwright: 'Playwright',
-        platform: 'Platforma',
+        features: 'Funkcje',
         environment: 'Środowisko',
-        all: 'Wszystkie',
-        search: 'Szukaj testów...',
-        generatedAt: 'Wygenerowano',
-        tests: 'testów',
+        trend: 'Trend',
+        itemsTotal: 'elementów w sumie',
+        showAll: 'Pokaż wszystko',
+        nothingToShow: 'Nie ma nic do pokazania',
+        executors: 'Wykonawcy',
+        noExecutorInfo: 'Brak informacji o wykonawcach testów',
       },
     };
     
@@ -246,16 +214,8 @@ class EnterpriseReporter implements Reporter {
     this.playwrightConfig = config;
     this.startTime = Date.now();
     
-    const totalTests = suite.allTests().length;
-    console.log('\n╔═══════════════════════════════════════════════════════╗');
-    console.log(`║  🚀 ${this.config.reportTitle}`.padEnd(56) + '║');
-    console.log('╠═══════════════════════════════════════════════════════╣');
-    console.log(`║  📦 Project: ${this.config.projectName}`.padEnd(56) + '║');
-    console.log(`║  🧪 Total Tests: ${totalTests}`.padEnd(56) + '║');
-    console.log(`║  👷 Workers: ${config.workers}`.padEnd(56) + '║');
-    console.log('╚═══════════════════════════════════════════════════════╝\n');
+    console.log(`\n🚀 Starting ${suite.allTests().length} tests...`);
     
-    // Create output directory
     if (!fs.existsSync(this.config.outputDir!)) {
       fs.mkdirSync(this.config.outputDir!, { recursive: true });
     }
@@ -266,7 +226,6 @@ class EnterpriseReporter implements Reporter {
     const steps: StepData[] = [];
     let currentTime = result.startTime.getTime();
 
-    // Process test steps with timing
     for (const step of result.steps) {
       const stepStart = currentTime;
       const stepEnd = stepStart + step.duration;
@@ -281,7 +240,6 @@ class EnterpriseReporter implements Reporter {
       currentTime = stepEnd;
     }
 
-    // Process attachments with base64 for screenshots
     const attachments: AttachmentData[] = [];
     for (const attachment of result.attachments) {
       const attData: AttachmentData = {
@@ -290,7 +248,6 @@ class EnterpriseReporter implements Reporter {
         path: attachment.path,
       };
 
-      // Convert screenshots to base64 for embedding
       if (this.config.includeScreenshots && 
           attachment.path && 
           attachment.contentType.startsWith('image/')) {
@@ -298,14 +255,13 @@ class EnterpriseReporter implements Reporter {
           const imageBuffer = fs.readFileSync(attachment.path);
           attData.base64 = imageBuffer.toString('base64');
         } catch (e) {
-          console.warn(`Could not read screenshot: ${attachment.path}`);
+          // Ignore
         }
       }
       
       attachments.push(attData);
     }
 
-    // Extract tags from test title or annotations
     const tags: string[] = [];
     test.annotations.forEach(ann => {
       if (ann.type === 'tag') {
@@ -313,7 +269,6 @@ class EnterpriseReporter implements Reporter {
       }
     });
 
-    // Try to extract category from tags
     let category = 'other';
     for (const tag of tags) {
       if (this.config.testCategories?.includes(tag.toLowerCase())) {
@@ -349,21 +304,23 @@ class EnterpriseReporter implements Reporter {
 
     this.allTests.push(testData);
 
-    // Group by project
     const projectName = testData.project || 'default';
     if (!this.testsByProject.has(projectName)) {
       this.testsByProject.set(projectName, []);
     }
     this.testsByProject.get(projectName)!.push(testData);
 
-    // Group by file
     const fileName = path.basename(testData.file);
     if (!this.testsByFile.has(fileName)) {
       this.testsByFile.set(fileName, []);
     }
     this.testsByFile.get(fileName)!.push(testData);
+    
+    if (!this.testsByCategory.has(category)) {
+      this.testsByCategory.set(category, []);
+    }
+    this.testsByCategory.get(category)!.push(testData);
 
-    // Console progress indicator
     const statusSymbol = {
       passed: '✅',
       failed: '❌',
@@ -383,37 +340,21 @@ class EnterpriseReporter implements Reporter {
       passed: this.allTests.filter(t => t.status === 'passed').length,
       failed: this.allTests.filter(t => t.status === 'failed').length,
       skipped: this.allTests.filter(t => t.status === 'skipped').length,
-      flaky: this.allTests.filter(t => t.status === 'passed' && t.retries > 0).length,
-      timedOut: this.allTests.filter(t => t.status === 'timedOut').length,
+      broken: this.allTests.filter(t => t.status === 'timedOut').length,
+      unknown: this.allTests.filter(t => !['passed', 'failed', 'skipped', 'timedOut'].includes(t.status)).length,
       duration,
       passRate: 0,
-      avgDuration: 0,
     };
 
     stats.passRate = stats.total > 0 ? (stats.passed / stats.total) * 100 : 0;
-    stats.avgDuration = stats.total > 0 ? 
-      this.allTests.reduce((sum, t) => sum + t.duration, 0) / stats.total : 0;
 
-    // Console summary
-    console.log('\n╔═══════════════════════════════════════════════════════╗');
-    console.log(`║  📊 ${this.translations.summary}`.padEnd(56) + '║');
-    console.log('╠═══════════════════════════════════════════════════════╣');
-    console.log(`║  ${this.translations.totalTests}: ${stats.total}`.padEnd(56) + '║');
-    console.log(`║  ✅ ${this.translations.passed}: ${stats.passed}`.padEnd(56) + '║');
-    console.log(`║  ❌ ${this.translations.failed}: ${stats.failed}`.padEnd(56) + '║');
-    console.log(`║  ⏭️  ${this.translations.skipped}: ${stats.skipped}`.padEnd(56) + '║');
-    console.log(`║  🔄 ${this.translations.flaky}: ${stats.flaky}`.padEnd(56) + '║');
-    console.log(`║  ⏱️  ${this.translations.duration}: ${(duration / 1000).toFixed(2)}s`.padEnd(56) + '║');
-    console.log(`║  📈 ${this.translations.passRate}: ${stats.passRate.toFixed(1)}%`.padEnd(56) + '║');
-    console.log('╚═══════════════════════════════════════════════════════╝\n');
+    console.log(`\n✅ ${stats.passed} passed | ❌ ${stats.failed} failed | ⏭️ ${stats.skipped} skipped`);
 
-    // Generate reports
     this.generateHTMLReport(stats);
     this.generateJSONReport(stats);
-    this.generateMarkdownReport(stats);
 
     const reportPath = path.resolve(this.config.outputDir!, 'index.html');
-    console.log(`\n📁 Enterprise Report: ${reportPath}\n`);
+    console.log(`\n📁 Report: ${reportPath}\n`);
   }
 
   private generateHTMLReport(stats: any) {
@@ -425,22 +366,9 @@ class EnterpriseReporter implements Reporter {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${this.config.reportTitle} - ${this.config.companyName}</title>
+    <title>${this.config.reportTitle}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
-        :root {
-            --primary-color: ${this.config.primaryColor};
-            --success-color: #10b981;
-            --error-color: #ef4444;
-            --warning-color: #f59e0b;
-            --info-color: #3b82f6;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -449,990 +377,754 @@ class EnterpriseReporter implements Reporter {
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .layout {
+            display: flex;
             min-height: 100vh;
-            padding: 20px;
-            color: var(--text-primary);
         }
         
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #2c3e50;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
         }
         
-        /* Header */
-        .report-header {
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+        
+        .company-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .project-name {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        
+        .nav-menu {
+            padding: 10px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: ${this.config.primaryColor};
+        }
+        
+        .nav-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+        }
+        
+        .top-bar {
             background: white;
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 20px 30px;
+            border-bottom: 1px solid #e0e0e0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .header-left {
-            flex: 1;
-        }
-        
-        .company-name {
-            color: var(--primary-color);
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-        
-        .report-title {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-        
-        .project-name {
-            font-size: 18px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        
-        .header-right {
-            text-align: right;
-        }
-        
-        .pass-rate-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--success-color), #059669);
-            color: white;
-        }
-        
-        .pass-rate-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-        
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent-color);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        
-        .stat-icon {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-        
-        .stat-value {
-            font-size: 42px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: var(--stat-color);
-        }
-        
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-        
-        .stat-card.total { --accent-color: var(--primary-color); --stat-color: var(--primary-color); }
-        .stat-card.passed { --accent-color: var(--success-color); --stat-color: var(--success-color); }
-        .stat-card.failed { --accent-color: var(--error-color); --stat-color: var(--error-color); }
-        .stat-card.skipped { --accent-color: var(--warning-color); --stat-color: var(--warning-color); }
-        .stat-card.flaky { --accent-color: #8b5cf6; --stat-color: #8b5cf6; }
-        .stat-card.duration { --accent-color: var(--info-color); --stat-color: var(--info-color); }
-        
-        /* Tabs */
-        .tabs-container {
-            background: white;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid var(--border-color);
-            background: var(--bg-secondary);
-        }
-        
-        .tab {
-            padding: 20px 30px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-secondary);
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            position: relative;
-        }
-        
-        .tab:hover {
-            background: white;
-            color: var(--primary-color);
-        }
-        
-        .tab.active {
-            background: white;
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-        
-        .tab-badge {
-            display: inline-block;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 12px;
-            padding: 2px 8px;
-            font-size: 11px;
-            margin-left: 8px;
+        .page-title {
+            font-size: 24px;
             font-weight: 700;
+            color: #2c3e50;
         }
         
-        .tab-content {
-            display: none;
+        .timestamp {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .content-area {
             padding: 30px;
         }
         
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* Charts */
-        .charts-grid {
+        /* Overview Cards */
+        .overview-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: 2fr 1fr;
             gap: 20px;
             margin-bottom: 30px;
         }
         
-        .chart-card {
+        .card {
             background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .chart-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        /* Timeline */
-        .timeline-container {
-            margin-top: 20px;
-        }
-        
-        .timeline-item {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: all 0.3s;
-            border-left: 4px solid var(--border-color);
-        }
-        
-        .timeline-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .timeline-item.passed { border-left-color: var(--success-color); }
-        .timeline-item.failed { border-left-color: var(--error-color); }
-        .timeline-item.skipped { border-left-color: var(--warning-color); }
-        
-        .timeline-label {
-            flex: 0 0 350px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .timeline-bar-container {
-            flex: 1;
-            height: 40px;
-            background: #e5e7eb;
             border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .timeline-bar {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            color: white;
-            font-weight: 700;
-            font-size: 13px;
-            transition: width 0.6s ease;
-        }
-        
-        .timeline-bar.passed {
-            background: linear-gradient(90deg, var(--success-color), #059669);
-        }
-        
-        .timeline-bar.failed {
-            background: linear-gradient(90deg, var(--error-color), #dc2626);
-        }
-        
-        .timeline-bar.skipped {
-            background: linear-gradient(90deg, var(--warning-color), #d97706);
-        }
-        
-        .timeline-duration {
-            flex: 0 0 100px;
-            text-align: right;
-            font-weight: 700;
-            color: var(--text-secondary);
-        }
-        
-        /* Test List */
-        .test-filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .search-box {
-            flex: 1;
-            min-width: 300px;
-            padding: 15px 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
-        
-        .search-box:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .filter-btn {
-            padding: 12px 24px;
-            border: 2px solid var(--border-color);
-            background: white;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-        
-        .filter-btn:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        
-        .filter-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .test-item {
-            background: white;
-            border-radius: 12px;
             padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--border-color);
-            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .test-item:hover {
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-        
-        .test-item.passed { border-left-color: var(--success-color); }
-        .test-item.failed { border-left-color: var(--error-color); }
-        .test-item.skipped { border-left-color: var(--warning-color); }
-        
-        .test-header {
+        .stats-container {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            gap: 20px;
+            align-items: center;
         }
         
-        .test-title-section {
+        .total-tests {
+            text-align: center;
+        }
+        
+        .total-number {
+            font-size: 72px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+        }
+        
+        .total-label {
+            font-size: 14px;
+            color: #777;
+            margin-top: 8px;
+            text-transform: lowercase;
+        }
+        
+        .status-bars {
             flex: 1;
+            margin-left: 40px;
         }
         
-        .test-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
+        .status-item {
+            margin-bottom: 20px;
         }
         
-        .test-path {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-family: 'Courier New', monospace;
+        .status-item:last-child {
+            margin-bottom: 0;
         }
         
-        .test-badges {
+        .status-label {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
         
-        .test-status {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
+        .status-name {
+            font-weight: 600;
+        }
+        
+        .status-count {
+            color: #777;
+        }
+        
+        .status-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .status-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .status-fill.passed { background: #4caf50; }
+        .status-fill.failed { background: #f44336; }
+        .status-fill.broken { background: #ff9800; }
+        .status-fill.skipped { background: #9e9e9e; }
+        .status-fill.unknown { background: #607d8b; }
+        
+        .donut-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        /* Section */
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
-        .test-status.passed {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        
-        .test-status.failed {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        
-        .test-status.skipped {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        
-        .test-meta {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .test-error {
-            background: #fef2f2;
-            border: 2px solid #fecaca;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-        
-        .error-title {
-            color: #991b1b;
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .error-message {
-            color: #991b1b;
-            font-family: 'Courier New', monospace;
+        .items-count {
+            color: #777;
             font-size: 13px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            line-height: 1.6;
         }
         
-        .error-message details {
-            margin-top: 15px;
-        }
-        
-        .error-message summary {
+        .show-all {
+            color: ${this.config.primaryColor};
+            font-size: 13px;
             cursor: pointer;
-            padding: 8px 12px;
-            background: #fee2e2;
-            border-radius: 6px;
-            transition: background 0.2s;
+            text-decoration: none;
         }
         
-        .error-message summary:hover {
-            background: #fecaca;
+        .show-all:hover {
+            text-decoration: underline;
         }
         
-        .error-message pre {
-            background: #1f2937;
-            color: #fca5a5;
-            padding: 15px;
+        /* Feature List */
+        .feature-list {
+            background: white;
             border-radius: 8px;
-            overflow-x: auto;
-            margin: 10px 0 0 0;
-        }
-        
-        .test-steps {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
-        }
-        
-        .steps-title {
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--text-primary);
-            font-size: 15px;
-        }
-        
-        .step-item {
-            background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-        }
-        
-        .step-title {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        
-        .step-duration {
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 12px;
-        }
-        
-        .test-screenshots {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-        }
-        
-        .screenshot-item {
-            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feature-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 20px;
+            transition: background 0.2s;
             cursor: pointer;
-            transition: transform 0.3s;
         }
         
-        .screenshot-item:hover {
-            transform: scale(1.05);
+        .feature-item:hover {
+            background: #fafafa;
         }
         
-        .screenshot-item img {
-            width: 100%;
-            display: block;
+        .feature-item:last-child {
+            border-bottom: none;
         }
         
-        .screenshot-label {
-            padding: 10px;
-            background: var(--bg-secondary);
-            font-size: 12px;
+        .feature-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .feature-stats {
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .feature-stat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
             font-weight: 600;
-            text-align: center;
+            color: white;
         }
         
-        /* Environment Info */
-        .env-info {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
+        .feature-stat.passed { background: #4caf50; }
+        .feature-stat.failed { background: #f44336; }
+        .feature-stat.broken { background: #ff9800; }
+        .feature-stat.skipped { background: #9e9e9e; }
         
+        /* Environment */
         .env-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
         
         .env-item {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
         
         .env-label {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: #777;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         
         .env-value {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #333;
         }
         
-        /* Summary Cards */
-        .summary-cards {
+        /* Categories */
+        .category-list {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .category-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .category-item:last-child {
+            border-bottom: none;
+        }
+        
+        .category-name {
+            flex: 0 0 250px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .category-bar {
+            flex: 1;
+            height: 32px;
+            background: #f44336;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+        
+        /* Content Pages */
+        .content-page {
+            display: none;
+        }
+        
+        .content-page.active {
+            display: block;
+        }
+        
+        /* Charts */
+        .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             margin-bottom: 30px;
         }
         
-        .summary-card {
+        .chart-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .summary-card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-secondary);
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
             margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .summary-list {
-            list-style: none;
-        }
-        
-        .summary-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .summary-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .summary-list-label {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        
-        .summary-list-value {
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        /* Utility */
-        .section-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin: 30px 0 20px 0;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        
-        .badge.smoke { background: #dbeafe; color: #1e40af; }
-        .badge.regression { background: #fce7f3; color: #9f1239; }
-        .badge.integration { background: #f3e8ff; color: #6b21a8; }
-        .badge.e2e { background: #d1fae5; color: #065f46; }
-        
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            
-            .filter-btn, .search-box {
-                display: none;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="report-header">
-            <div class="header-left">
-                ${this.config.logo ? `
-                <div style="margin-bottom: 15px;">
-                    <img src="${this.config.logo}" alt="Company Logo" style="max-height: 60px; max-width: 200px;">
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    ${this.config.logo ? `<img src="${this.config.logo}" alt="Logo" class="logo">` : '<div class="logo" style="background: ${this.config.primaryColor}; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎭</div>'}
+                    <div>
+                        <div class="company-name">${this.config.companyName}</div>
+                        <div class="project-name">${this.config.projectName}</div>
+                    </div>
                 </div>
-                ` : ''}
-                <div class="company-name">${this.config.companyName}</div>
-                <h1 class="report-title">${this.config.reportTitle}</h1>
-                <div class="project-name">${this.config.projectName}</div>
             </div>
-            <div class="header-right">
-                <div class="pass-rate-circle">${stats.passRate.toFixed(0)}%</div>
-                <div class="pass-rate-label">${t.passRate}</div>
-            </div>
-        </div>
+            <nav class="nav-menu">
+                <a class="nav-item active" data-page="overview">
+                    <span class="nav-icon">🏠</span>
+                    <span>${t.overview}</span>
+                </a>
+                <a class="nav-item" data-page="categories">
+                    <span class="nav-icon">📂</span>
+                    <span>${t.categories}</span>
+                </a>
+                <a class="nav-item" data-page="suites">
+                    <span class="nav-icon">📦</span>
+                    <span>${t.suites}</span>
+                </a>
+                <a class="nav-item" data-page="graphs">
+                    <span class="nav-icon">📊</span>
+                    <span>${t.graphs}</span>
+                </a>
+                <a class="nav-item" data-page="timeline">
+                    <span class="nav-icon">⏱️</span>
+                    <span>${t.timeline}</span>
+                </a>
+                <a class="nav-item" data-page="behaviors">
+                    <span class="nav-icon">🎯</span>
+                    <span>${t.behaviors}</span>
+                </a>
+                <a class="nav-item" data-page="packages">
+                    <span class="nav-icon">📝</span>
+                    <span>${t.packages}</span>
+                </a>
+            </nav>
+        </aside>
         
-        <!-- Environment Info -->
-        ${this.config.showEnvironmentInfo ? `
-        <div class="env-info">
-            <div class="env-grid">
-                <div class="env-item">
-                    <div class="env-label">${t.timestamp}</div>
-                    <div class="env-value">${envInfo.timestamp}</div>
-                </div>
-                <div class="env-item">
-                    <div class="env-label">${t.duration}</div>
-                    <div class="env-value">${(envInfo.duration / 1000).toFixed(2)}s</div>
-                </div>
-                <div class="env-item">
-                    <div class="env-label">${t.workers}</div>
-                    <div class="env-value">${envInfo.workers}</div>
-                </div>
-                <div class="env-item">
-                    <div class="env-label">${t.nodeVersion}</div>
-                    <div class="env-value">${envInfo.nodeVersion}</div>
-                </div>
-                <div class="env-item">
-                    <div class="env-label">${t.playwright}</div>
-                    <div class="env-value">${envInfo.playwrightVersion}</div>
-                </div>
-                <div class="env-item">
-                    <div class="env-label">${t.platform}</div>
-                    <div class="env-value">${envInfo.os}</div>
-                </div>
-            </div>
-        </div>
-        ` : ''}
-        
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card total">
-                <div class="stat-icon">🧪</div>
-                <div class="stat-value">${stats.total}</div>
-                <div class="stat-label">${t.totalTests}</div>
-            </div>
-            <div class="stat-card passed">
-                <div class="stat-icon">✅</div>
-                <div class="stat-value">${stats.passed}</div>
-                <div class="stat-label">${t.passed}</div>
-            </div>
-            <div class="stat-card failed">
-                <div class="stat-icon">❌</div>
-                <div class="stat-value">${stats.failed}</div>
-                <div class="stat-label">${t.failed}</div>
-            </div>
-            <div class="stat-card skipped">
-                <div class="stat-icon">⏭️</div>
-                <div class="stat-value">${stats.skipped}</div>
-                <div class="stat-label">${t.skipped}</div>
-            </div>
-            <div class="stat-card flaky">
-                <div class="stat-icon">🔄</div>
-                <div class="stat-value">${stats.flaky}</div>
-                <div class="stat-label">${t.flaky}</div>
-            </div>
-            <div class="stat-card duration">
-                <div class="stat-icon">⏱️</div>
-                <div class="stat-value">${(stats.avgDuration / 1000).toFixed(1)}s</div>
-                <div class="stat-label">${t.duration}</div>
-            </div>
-        </div>
-        
-        <!-- Tabs -->
-        <div class="tabs-container">
-            <div class="tabs">
-                <div class="tab active" data-tab="overview">
-                    📊 ${t.overview}
-                </div>
-                <div class="tab" data-tab="tests">
-                    📝 ${t.allTests}
-                    <span class="tab-badge">${stats.total}</span>
-                </div>
-                <div class="tab" data-tab="failed">
-                    ❌ ${t.failedTests}
-                    <span class="tab-badge">${stats.failed}</span>
-                </div>
-                <div class="tab" data-tab="timeline">
-                    ⏱️ ${t.timeline}
-                </div>
-                <div class="tab" data-tab="projects">
-                    📦 ${t.projects}
-                </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 class="page-title">${this.config.reportTitle}</h1>
+                <div class="timestamp">${new Date().toLocaleString(this.config.language)}</div>
             </div>
             
-            <!-- Overview Tab -->
-            <div class="tab-content active" id="overview">
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <div class="chart-title">📈 ${t.statusDistribution}</div>
-                        <canvas id="statusChart"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-title">⏱️ ${t.durationAnalysis}</div>
-                        <canvas id="durationChart"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-title">📊 ${t.testsByCategory}</div>
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-title">🎯 ${t.passRateTrend}</div>
-                        <canvas id="trendChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="summary-cards">
-                    <div class="summary-card">
-                        <div class="summary-card-title">📂 ${t.topFilesByTests}</div>
-                        <ul class="summary-list">
-                            ${this.getTopFilesByTests(5).map(item => `
-                                <li>
-                                    <span class="summary-list-label">${item.file}</span>
-                                    <span class="summary-list-value">${item.count}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-card-title">⏱️ ${t.slowestTests}</div>
-                        <ul class="summary-list">
-                            ${this.getSlowestTests(5).map(test => `
-                                <li>
-                                    <span class="summary-list-label">${this.truncate(test.title, 30)}</span>
-                                    <span class="summary-list-value">${(test.duration / 1000).toFixed(2)}s</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-card-title">🎯 ${t.projectsSummary}</div>
-                        <ul class="summary-list">
-                            ${Array.from(this.testsByProject.entries()).map(([project, tests]) => `
-                                <li>
-                                    <span class="summary-list-label">${project}</span>
-                                    <span class="summary-list-value">${tests.length} ${t.tests}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- All Tests Tab -->
-            <div class="tab-content" id="tests">
-                <div class="test-filters">
-                    <input type="text" class="search-box" id="searchBox" placeholder="🔍 ${t.search}">
-                    <button class="filter-btn active" data-filter="all">${t.all}</button>
-                    <button class="filter-btn" data-filter="passed">${t.passed}</button>
-                    <button class="filter-btn" data-filter="failed">${t.failed}</button>
-                    <button class="filter-btn" data-filter="skipped">${t.skipped}</button>
-                </div>
-                
-                <div id="testsContainer">
-                    ${this.allTests.map(test => this.renderTestItem(test)).join('')}
-                </div>
-            </div>
-            
-            <!-- Failed Tests Tab -->
-            <div class="tab-content" id="failed">
-                ${this.allTests.filter(tt => tt.status === 'failed').length > 0 ? `
-                    <div id="failedTestsContainer">
-                        ${this.allTests.filter(tt => tt.status === 'failed').map(test => this.renderTestItem(test)).join('')}
-                    </div>
-                ` : `<p style="text-align: center; color: var(--text-secondary); padding: 40px;">${t.noFailedTests}</p>`}
-            </div>
-            
-            <!-- Timeline Tab -->
-            <div class="tab-content" id="timeline">
-                <div class="timeline-container">
-                    ${this.allTests
-                        .sort((a, b) => b.duration - a.duration)
-                        .map(test => {
-                            const maxDuration = Math.max(...this.allTests.map(tt => tt.duration));
-                            const percentage = (test.duration / maxDuration) * 100;
-                            return `
-                                <div class="timeline-item ${test.status}">
-                                    <div class="timeline-label" title="${this.escapeHtml(test.fullTitle)}">
-                                        ${this.escapeHtml(this.truncate(test.fullTitle, 50))}
-                                    </div>
-                                    <div class="timeline-bar-container">
-                                        <div class="timeline-bar ${test.status}" style="width: ${percentage}%">
-                                            ${(test.duration / 1000).toFixed(2)}s
+            <div class="content-area">
+                <!-- Overview Page -->
+                <div class="content-page active" data-page="overview">
+                    <div class="overview-grid">
+                        <div class="card">
+                            <div class="stats-container">
+                                <div class="total-tests">
+                                    <div class="total-number">${stats.total}</div>
+                                    <div class="total-label">${t.testCases}</div>
+                                </div>
+                                <div class="status-bars">
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-name">${t.passed}</span>
+                                            <span class="status-count">${stats.passed}</span>
+                                        </div>
+                                        <div class="status-bar">
+                                            <div class="status-fill passed" style="width: ${(stats.passed/stats.total*100).toFixed(1)}%"></div>
                                         </div>
                                     </div>
-                                    <div class="timeline-duration">${(test.duration / 1000).toFixed(2)}s</div>
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-name">${t.failed}</span>
+                                            <span class="status-count">${stats.failed}</span>
+                                        </div>
+                                        <div class="status-bar">
+                                            <div class="status-fill failed" style="width: ${(stats.failed/stats.total*100).toFixed(1)}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-name">${t.broken}</span>
+                                            <span class="status-count">${stats.broken}</span>
+                                        </div>
+                                        <div class="status-bar">
+                                            <div class="status-fill broken" style="width: ${(stats.broken/stats.total*100).toFixed(1)}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-name">${t.skipped}</span>
+                                            <span class="status-count">${stats.skipped}</span>
+                                        </div>
+                                        <div class="status-bar">
+                                            <div class="status-fill skipped" style="width: ${(stats.skipped/stats.total*100).toFixed(1)}%"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            `;
-                        }).join('')}
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="donut-container">
+                                <canvas id="overviewDonut"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Suites Section -->
+                    <div class="section">
+                        <div class="section-header">
+                            <div>
+                                <span class="section-title">${t.suites}</span>
+                                <span class="items-count">${this.testsByFile.size} ${t.itemsTotal}</span>
+                            </div>
+                            <a class="show-all">${t.showAll}</a>
+                        </div>
+                        <div class="feature-list">
+                            ${Array.from(this.testsByFile.entries()).slice(0, 5).map(([file, tests]) => {
+                                const passed = tests.filter(t => t.status === 'passed').length;
+                                const failed = tests.filter(t => t.status === 'failed').length;
+                                const broken = tests.filter(t => t.status === 'timedOut').length;
+                                const skipped = tests.filter(t => t.status === 'skipped').length;
+                                return `
+                                    <div class="feature-item">
+                                        <div class="feature-name">${this.escapeHtml(file)}</div>
+                                        <div class="feature-stats">
+                                            ${failed > 0 ? `<div class="feature-stat failed" style="width: ${(failed/tests.length*100).toFixed(1)}%">${failed}</div>` : ''}
+                                            ${passed > 0 ? `<div class="feature-stat passed" style="width: ${(passed/tests.length*100).toFixed(1)}%">${passed}</div>` : ''}
+                                            ${broken > 0 ? `<div class="feature-stat broken" style="width: ${(broken/tests.length*100).toFixed(1)}%">${broken}</div>` : ''}
+                                            ${skipped > 0 ? `<div class="feature-stat skipped" style="width: ${(skipped/tests.length*100).toFixed(1)}%">${skipped}</div>` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Environment Section -->
+                    <div class="section">
+                        <div class="section-header">
+                            <span class="section-title">${t.environment}</span>
+                        </div>
+                        <div class="card">
+                            <div class="env-grid">
+                                <div class="env-item">
+                                    <div class="env-label">Environment</div>
+                                    <div class="env-value">stage</div>
+                                </div>
+                                <div class="env-item">
+                                    <div class="env-label">Browser</div>
+                                    <div class="env-value">${this.playwrightConfig?.projects?.[0]?.name || 'Chromium'}</div>
+                                </div>
+                                <div class="env-item">
+                                    <div class="env-label">Node</div>
+                                    <div class="env-value">${envInfo.nodeVersion}</div>
+                                </div>
+                                <div class="env-item">
+                                    <div class="env-label">Playwright</div>
+                                    <div class="env-value">${envInfo.playwrightVersion}</div>
+                                </div>
+                                <div class="env-item">
+                                    <div class="env-label">Platform</div>
+                                    <div class="env-value">${envInfo.os}</div>
+                                </div>
+                                <div class="env-item">
+                                    <div class="env-label">${t.duration}</div>
+                                    <div class="env-value">${(stats.duration/1000).toFixed(2)}s</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Categories Page -->
+                <div class="content-page" data-page="categories">
+                    <div class="section">
+                        <div class="section-header">
+                            <div>
+                                <span class="section-title">${t.categories}</span>
+                                <span class="items-count">${this.testsByCategory.size} ${t.itemsTotal}</span>
+                            </div>
+                            <a class="show-all">${t.showAll}</a>
+                        </div>
+                        ${this.testsByCategory.size > 0 ? `
+                        <div class="category-list">
+                            ${Array.from(this.testsByCategory.entries()).map(([category, tests]) => {
+                                const failed = tests.filter(t => t.status === 'failed').length;
+                                return `
+                                    <div class="category-item">
+                                        <div class="category-name">${this.escapeHtml(category)}</div>
+                                        <div class="category-bar" style="width: ${(failed/this.allTests.length*100*3).toFixed(0)}%">
+                                            ${failed}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        ` : `
+                        <div class="empty-state">
+                            <div class="empty-icon">📂</div>
+                            <div>${t.nothingToShow}</div>
+                        </div>
+                        `}
+                    </div>
+                </div>
+                
+                <!-- Graphs Page -->
+                <div class="content-page" data-page="graphs">
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-title">Status Distribution</div>
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">Duration Analysis</div>
+                            <canvas id="durationChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">Pass Rate Trend</div>
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">Tests by Category</div>
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty pages -->
+                <div class="content-page" data-page="suites">
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <div>${t.nothingToShow}</div>
+                    </div>
+                </div>
+                
+                <div class="content-page" data-page="timeline">
+                    <div class="empty-state">
+                        <div class="empty-icon">⏱️</div>
+                        <div>${t.nothingToShow}</div>
+                    </div>
+                </div>
+                
+                <div class="content-page" data-page="behaviors">
+                    <div class="empty-state">
+                        <div class="empty-icon">🎯</div>
+                        <div>${t.nothingToShow}</div>
+                    </div>
+                </div>
+                
+                <div class="content-page" data-page="packages">
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <div>${t.nothingToShow}</div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Projects Tab -->
-            <div class="tab-content" id="projects">
-                ${Array.from(this.testsByProject.entries()).map(([project, tests]) => `
-                    <div style="margin-bottom: 40px;">
-                        <h3 style="margin-bottom: 20px; color: var(--primary-color);">
-                            📦 ${project} (${tests.length} ${t.tests})
-                        </h3>
-                        ${tests.map(test => this.renderTestItem(test)).join('')}
-                    </div>
-                `).join('')}
-            </div>
-        </div>
+        </main>
     </div>
     
     <script>
-        const testsData = ${JSON.stringify(this.allTests)};
-        const stats = ${JSON.stringify(stats)};
-        const translations = ${JSON.stringify(t)};
-        
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const page = this.dataset.page;
+                
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.content-page').forEach(p => p.classList.remove('active'));
+                document.querySelector(\`.content-page[data-page="\${page}"]\`).classList.add('active');
             });
         });
         
         // Charts
         Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         
-        // Status Chart
-        new Chart(document.getElementById('statusChart'), {
+        // Overview Donut
+        new Chart(document.getElementById('overviewDonut'), {
             type: 'doughnut',
             data: {
-                labels: [translations.passed, translations.failed, translations.skipped, translations.flaky],
+                labels: ['${t.passed}', '${t.failed}', '${t.broken}', '${t.skipped}'],
                 datasets: [{
-                    data: [stats.passed, stats.failed, stats.skipped, stats.flaky],
-                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b', '#8b5cf6'],
+                    data: [${stats.passed}, ${stats.failed}, ${stats.broken}, ${stats.skipped}],
+                    backgroundColor: ['#4caf50', '#f44336', '#ff9800', '#9e9e9e'],
                     borderWidth: 0
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom', labels: { padding: 15, font: { size: 13 } } },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => {
-                                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                const pct = ((ctx.parsed / total) * 100).toFixed(1);
-                                return ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
-                            }
-                        }
+                    legend: {
+                        display: false
                     }
+                },
+                cutout: '70%'
+            }
+        });
+        
+        // Status Chart
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['${t.passed}', '${t.failed}', '${t.broken}', '${t.skipped}'],
+                datasets: [{
+                    data: [${stats.passed}, ${stats.failed}, ${stats.broken}, ${stats.skipped}],
+                    backgroundColor: ['#4caf50', '#f44336', '#ff9800', '#9e9e9e']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
                 }
             }
         });
         
         // Duration Chart
-        const sortedTests = [...testsData].sort((a, b) => b.duration - a.duration).slice(0, 10);
+        const sortedTests = ${JSON.stringify(this.allTests.sort((a, b) => b.duration - a.duration).slice(0, 10))};
         new Chart(document.getElementById('durationChart'), {
             type: 'bar',
             data: {
-                labels: sortedTests.map(t => t.title.substring(0, 25)),
+                labels: sortedTests.map(t => t.title.substring(0, 20)),
                 datasets: [{
-                    label: translations.duration + ' (s)',
+                    label: '${t.duration} (s)',
                     data: sortedTests.map(t => (t.duration / 1000).toFixed(2)),
-                    backgroundColor: sortedTests.map(t => 
-                        t.status === 'passed' ? '#10b981' : t.status === 'failed' ? '#ef4444' : '#f59e0b'
-                    )
+                    backgroundColor: '#${this.config.primaryColor?.substring(1)}'
                 }]
             },
             options: {
                 indexAxis: 'y',
                 responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { x: { beginAtZero: true, title: { display: true, text: translations.duration } } }
+                plugins: { legend: { display: false } }
             }
         });
         
-        // Category Chart
-        const categories = {};
-        testsData.forEach(t => {
-            categories[t.category] = (categories[t.category] || 0) + 1;
-        });
-        
-        new Chart(document.getElementById('categoryChart'), {
-            type: 'pie',
-            data: {
-                labels: Object.keys(categories),
-                datasets: [{
-                    data: Object.values(categories),
-                    backgroundColor: ['#3b82f6', '#ec4899', '#8b5cf6', '#10b981', '#f59e0b']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-        
-        // Trend Chart (simulated)
+        // Trend Chart
         new Chart(document.getElementById('trendChart'), {
             type: 'line',
             data: {
                 labels: ['Run 1', 'Run 2', 'Run 3', 'Run 4', 'Current'],
                 datasets: [{
-                    label: translations.passRate + ' %',
-                    data: [85, 88, 90, 87, stats.passRate],
-                    borderColor: '#667eea',
+                    label: '${t.passRate} %',
+                    data: [85, 88, 90, 87, ${stats.passRate.toFixed(1)}],
+                    borderColor: '#${this.config.primaryColor?.substring(1)}',
                     backgroundColor: 'rgba(102, 126, 234, 0.1)',
                     tension: 0.4,
                     fill: true
@@ -1442,104 +1134,32 @@ class EnterpriseReporter implements Reporter {
                 responsive: true,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, max: 100, title: { display: true, text: translations.passRate + ' %' } }
+                    y: { beginAtZero: true, max: 100 }
                 }
             }
         });
         
-        // Filter functionality
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                const filter = btn.dataset.filter;
-                document.querySelectorAll('#testsContainer .test-item').forEach(item => {
-                    if (filter === 'all' || item.dataset.status === filter) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-        });
-        
-        // Search functionality
-        document.getElementById('searchBox')?.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('#testsContainer .test-item').forEach(item => {
-                const title = item.querySelector('.test-title').textContent.toLowerCase();
-                item.style.display = title.includes(term) ? 'block' : 'none';
-            });
+        // Category Chart
+        const categories = ${JSON.stringify(Array.from(this.testsByCategory.entries()).map(([cat, tests]) => ({ cat, count: tests.length })))};
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: {
+                labels: categories.map(c => c.cat),
+                datasets: [{
+                    data: categories.map(c => c.count),
+                    backgroundColor: ['#3b82f6', '#ec4899', '#8b5cf6', '#10b981', '#f59e0b']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
         });
     </script>
 </body>
 </html>`;
 
     fs.writeFileSync(path.join(this.config.outputDir!, 'index.html'), html);
-  }
-
-  private renderTestItem(test: TestData): string {
-    const screenshots = test.attachments.filter(a => a.contentType.startsWith('image/'));
-    const t = this.translations;
-    
-    return `
-        <div class="test-item ${test.status}" data-status="${test.status}">
-            <div class="test-header">
-                <div class="test-title-section">
-                    <div class="test-title">${this.escapeHtml(test.title)}</div>
-                    <div class="test-path">${this.escapeHtml(test.fullTitle)}</div>
-                </div>
-                <div class="test-badges">
-                    <span class="test-status ${test.status}">${test.status}</span>
-                    ${test.tags.map(tag => `<span class="badge ${tag}">${tag}</span>`).join('')}
-                </div>
-            </div>
-            
-            <div class="test-meta">
-                <div class="meta-item">📁 ${this.escapeHtml(path.basename(test.file))}:${test.line}</div>
-                <div class="meta-item">⏱️ ${(test.duration / 1000).toFixed(2)}s</div>
-                ${test.project ? `<div class="meta-item">🎯 ${test.project}</div>` : ''}
-                ${test.retries > 0 ? `<div class="meta-item">🔄 Retries: ${test.retries}</div>` : ''}
-            </div>
-            
-            ${test.error ? `
-                <div class="test-error">
-                    <div class="error-title">❌ ${t.error}</div>
-                    <div class="error-message">${this.cleanErrorMessage(test.error.message)}</div>
-                    ${test.error.stack ? `
-                    <details style="margin-top: 10px;">
-                        <summary style="cursor: pointer; color: #991b1b; font-weight: 600;">Stack Trace</summary>
-                        <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto;">${this.cleanErrorMessage(test.error.stack)}</pre>
-                    </details>
-                    ` : ''}
-                </div>
-            ` : ''}
-            
-            ${test.steps.length > 0 ? `
-                <div class="test-steps">
-                    <div class="steps-title">📋 ${t.testSteps}</div>
-                    ${test.steps.map(step => `
-                        <div class="step-item">
-                            <span class="step-title">${this.escapeHtml(step.title)}</span>
-                            <span class="step-duration">${(step.duration / 1000).toFixed(2)}s</span>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-            
-            ${screenshots.length > 0 && this.config.includeScreenshots ? `
-                <div class="test-screenshots">
-                    ${screenshots.map(ss => `
-                        <div class="screenshot-item">
-                            <img src="data:${ss.contentType};base64,${ss.base64}" alt="${ss.name}">
-                            <div class="screenshot-label">${ss.name}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-        </div>
-    `;
   }
 
   private generateJSONReport(stats: any) {
@@ -1550,6 +1170,7 @@ class EnterpriseReporter implements Reporter {
       tests: this.allTests,
       testsByProject: Object.fromEntries(this.testsByProject),
       testsByFile: Object.fromEntries(this.testsByFile),
+      testsByCategory: Object.fromEntries(this.testsByCategory),
       generatedAt: new Date().toISOString(),
     };
     
@@ -1557,42 +1178,6 @@ class EnterpriseReporter implements Reporter {
       path.join(this.config.outputDir!, 'report.json'),
       JSON.stringify(jsonData, null, 2)
     );
-  }
-
-  private generateMarkdownReport(stats: any) {
-    const md = `# ${this.config.reportTitle}
-**${this.config.companyName}** - ${this.config.projectName}
-
-## 📊 Summary
-
-- **Total Tests**: ${stats.total}
-- **Passed**: ✅ ${stats.passed} (${stats.passRate.toFixed(1)}%)
-- **Failed**: ❌ ${stats.failed}
-- **Skipped**: ⏭️ ${stats.skipped}
-- **Flaky**: 🔄 ${stats.flaky}
-- **Duration**: ${(stats.duration / 1000).toFixed(2)}s
-- **Generated**: ${new Date().toISOString()}
-
-## Failed Tests
-
-${this.allTests.filter(t => t.status === 'failed').map(test => `
-### ❌ ${test.title}
-
-- **File**: ${test.file}:${test.line}
-- **Duration**: ${(test.duration / 1000).toFixed(2)}s
-- **Error**: ${test.error?.message || 'N/A'}
-`).join('\n') || '_No failed tests_'}
-
-## Performance
-
-### Slowest Tests
-
-${this.getSlowestTests(10).map((test, i) => 
-  `${i + 1}. ${test.title} - ${(test.duration / 1000).toFixed(2)}s`
-).join('\n')}
-`;
-
-    fs.writeFileSync(path.join(this.config.outputDir!, 'report.md'), md);
   }
 
   private getEnvironmentInfo(): EnvironmentInfo {
@@ -1604,19 +1189,6 @@ ${this.getSlowestTests(10).map((test, i) =>
       duration: this.endTime - this.startTime,
       workers: this.playwrightConfig?.workers || 1,
     };
-  }
-
-  private getSlowestTests(count: number): TestData[] {
-    return [...this.allTests]
-      .sort((a, b) => b.duration - a.duration)
-      .slice(0, count);
-  }
-
-  private getTopFilesByTests(count: number) {
-    return Array.from(this.testsByFile.entries())
-      .map(([file, tests]) => ({ file, count: tests.length }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, count);
   }
 
   private escapeHtml(text: string): string {
@@ -1631,15 +1203,10 @@ ${this.getSlowestTests(10).map((test, i) =>
   }
   
   private stripAnsiCodes(text: string): string {
-    // Remove ANSI escape codes (colors, formatting, etc.)
     // eslint-disable-next-line no-control-regex
     return text.replace(/\u001b\[\d+m/g, '')
                .replace(/\u001b\[[\d;]+m/g, '')
                .replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
-  }
-  
-  private cleanErrorMessage(text: string): string {
-    return this.escapeHtml(this.stripAnsiCodes(text));
   }
 
   private truncate(text: string, length: number): string {
